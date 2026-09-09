@@ -1,0 +1,61 @@
+# 실행:  docker compose up -d --build
+# 학습:  docker compose run --rm detector python -m training.train --mode high
+# 로그:  docker compose logs -f detector
+
+services:
+  detector:
+    build:
+      context: ./detector
+    image: cake/detector
+    container_name: cake-detector
+    env_file: .env
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./detector:/app # 코드 (개발 중 즉시 반영)
+      - ./checkpoints:/checkpoints # 학습된 가중치
+      - ./data:/data # 학습 데이터셋 (real/, fake/, manifest.csv)
+      - media:/media # 업로드 영상 (backend 와 공유)
+      - reports:/reports # 분석 산출물 (backend 와 공유)
+      - ./runs:/runs # 학습 로그·지표·그래프
+    ports:
+      - "3001:3001"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    shm_size: "8gb" # DataLoader worker 공유 메모리 (4gb 에서 LSTM 학습 시 Bus error 발생)
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:3001/health',timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  backend:
+    build:
+      context: ./backend
+    image: cake/backend
+    container_name: cake-backend
+    env_file: .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./backend:/app
+      - media:/media
+      - reports:/reports
+    ports:
+      - "8000:8000"
+    depends_on:
+      detector:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  media:
+  reports:

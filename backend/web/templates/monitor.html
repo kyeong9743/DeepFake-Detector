@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}시스템 모니터링 — CAKE{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="an-head">
+    <div><h2>시스템 모니터링</h2><div class="muted small">분석 서버(GPU) · 백엔드 리소스 · 작업 큐 — 2초 간격 갱신</div></div>
+    <span class="badge" id="m-state">연결 중…</span>
+  </div>
+  <div class="grid3">
+    <div class="card mini"><div class="mini-k" id="m-gpu">—</div><div class="muted">GPU 사용률</div><div class="small muted" id="m-gpu-name"></div></div>
+    <div class="card mini"><div class="mini-k" id="m-gmem">—</div><div class="muted">GPU 메모리</div><div class="small muted" id="m-gmem-d"></div></div>
+    <div class="card mini"><div class="mini-k" id="m-cpu">—</div><div class="muted">분석 서버 CPU</div><div class="small muted" id="m-cpu-d"></div></div>
+    <div class="card mini"><div class="mini-k" id="m-mem">—</div><div class="muted">분석 서버 메모리</div><div class="small muted" id="m-mem-d"></div></div>
+    <div class="card mini"><div class="mini-k" id="m-queue">—</div><div class="muted">대기 큐</div><div class="small muted" id="m-jobs"></div></div>
+    <div class="card mini"><div class="mini-k" id="m-temp">—</div><div class="muted">GPU 온도 / 전력</div><div class="small muted" id="m-power"></div></div>
+  </div>
+</section>
+
+<section class="card">
+  <h3>리소스 사용량 (최근 2분)</h3>
+  <canvas id="m-chart" height="240"></canvas>
+  <div class="legend"><span class="lg c-cnn">GPU 사용률</span><span class="lg c-ens">GPU 메모리</span><span class="lg c-lstm">CPU</span><span class="lg c-freq">RAM</span></div>
+</section>
+
+<section class="card">
+  <h3>현재 작업</h3>
+  <div id="m-current" class="muted">처리 중인 분석이 없습니다.</div>
+  <div class="progress" id="m-prog" hidden><div class="bar"></div><span class="ptxt"></span></div>
+</section>
+
+<section class="card">
+  <h3>백엔드</h3>
+  <div class="grid3">
+    <div class="card mini"><div class="mini-k" id="b-cpu">—</div><div class="muted">CPU</div></div>
+    <div class="card mini"><div class="mini-k" id="b-mem">—</div><div class="muted">메모리</div></div>
+    <div class="card mini"><div class="mini-k" id="b-mode">—</div><div class="muted">분석 모드 / 모델</div></div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script>CAKE.initMonitor();</script>{% endblock %}

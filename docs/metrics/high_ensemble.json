@@ -1,0 +1,82 @@
+{
+  "mode": "high",
+  "method": "grid_search",
+  "weights": {
+    "cnn": 0.52,
+    "lstm": 0.38,
+    "frequency": 0.1
+  },
+  "threshold": 0.5139,
+  "model_thresholds": {
+    "cnn": 0.5961,
+    "lstm": 0.4585,
+    "frequency": 0.4504
+  },
+  "metrics_at_threshold": {
+    "threshold": 0.5138763535022736,
+    "n": 15834,
+    "accuracy": 0.9809902740937224,
+    "precision": 0.9910990712074303,
+    "recall": 0.9706885660138976,
+    "f1": 0.9807876428161103,
+    "confusion_matrix": [
+      [
+        7850,
+        69
+      ],
+      [
+        232,
+        7683
+      ]
+    ],
+    "auc": 0.9965493164085482,
+    "ap": 0.9973182673433129,
+    "best_threshold": 0.5138763535022736
+  },
+  "metrics_at_0.5": {
+    "threshold": 0.5,
+    "n": 15834,
+    "accuracy": 0.9806744979158772,
+    "precision": 0.9899549259497746,
+    "recall": 0.9711939355653821,
+    "f1": 0.980484693877551,
+    "confusion_matrix": [
+      [
+        7841,
+        78
+      ],
+      [
+        228,
+        7687
+      ]
+    ],
+    "auc": 0.9965493164085482,
+    "ap": 0.9973182673433129,
+    "best_threshold": 0.5138763535022736
+  },
+  "voting_accuracy": 0.9791,
+  "grid_search": {
+    "best_auc": 0.99655,
+    "best_w": [
+      0.52,
+      0.38,
+      0.1
+    ],
+    "n_combos": 231
+  },
+  "bayesian_opt": {
+    "best_auc": 0.99655,
+    "best_w": [
+      0.5266,
+      0.3734,
+      0.1
+    ],
+    "n_obs": 49
+  },
+  "single_model_auc": {
+    "cnn": 0.99739,
+    "lstm": 0.99702,
+    "frequency": 0.84734
+  },
+  "n_videos": 15834
+}

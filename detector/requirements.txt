@@ -1,0 +1,27 @@
+# torch / torchvision 은 베이스 이미지(pytorch/pytorch:2.7.1-cuda12.8)에 포함
+opencv-python-headless>=4.10,<5
+numpy>=1.26,<2.0
+scipy>=1.11
+scikit-learn>=1.4
+matplotlib>=3.8
+imageio>=2.34
+imageio-ffmpeg>=0.5
+tqdm>=4.66
+Pillow>=10.0
+
+# API
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.7
+pydantic-settings>=2.3
+python-multipart>=0.0.9
+httpx>=0.27
+websockets>=12.0
+
+# 데이터셋 / 유틸
+yt-dlp>=2024.8.6
+pandas>=2.2
+
+# 리소스 모니터링 (/metrics)
+psutil>=5.9
+nvidia-ml-py>=12.535

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>영상의 딥페이크 여부를 분석합니다</h1>
+  <p class="muted">CNN(공간) · LSTM(시간) · Frequency(주파수) 세 모델의 앙상블로 조작 확률을 계산하고, Grad-CAM 으로 의심 영역을 표시합니다.</p>
+</section>
+
+<section class="card">
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-tab="file" role="tab">영상 파일</button>
+    <button class="tab" data-tab="url" role="tab">YouTube / URL</button>
+  </div>
+
+  <form id="upload-form" class="tabpane" data-pane="file">
+    <label class="drop" id="drop" for="file-input">
+      <input type="file" id="file-input" name="file" accept="{% for e in exts %}.{{e}},{% endfor %}" hidden>
+      <div class="drop-ico">⬆</div>
+      <div class="drop-txt"><b>영상 파일을 끌어다 놓거나 클릭해 선택</b><br>
+        <span class="muted">지원 형식: {{ exts|join(', ')|upper }} · 최대 {{ max_mb }}MB</span></div>
+      <div id="file-name" class="file-name"></div>
+    </label>
+    <div class="row">
+      <label class="mode"><input type="radio" name="mode" value="high" {{ 'checked' if default_mode=='high' else '' }}> <b>HIGH</b> <span class="muted">정밀 (ResNet34 · 384px · 양방향 LSTM)</span></label>
+      <label class="mode"><input type="radio" name="mode" value="fast" {{ 'checked' if default_mode=='fast' else '' }}> <b>FAST</b> <span class="muted">빠른 분석 (ResNet18 · 224px)</span></label>
+    </div>
+    <button class="btn primary" id="btn-upload" type="submit" disabled>분석 시작</button>
+    <div class="progress" id="up-progress" hidden><div class="bar"></div><span class="ptxt">업로드 중 0%</span></div>
+    <div class="err" id="up-err" role="alert"></div>
+  </form>
+
+  <form id="url-form" class="tabpane" data-pane="url" hidden>
+    <label class="field">
+      <span>영상 URL</span>
+      <input type="url" name="url" id="url-input" placeholder="https://www.youtube.com/watch?v=..." required>
+    </label>
+    <div class="row">
+      <label class="mode"><input type="radio" name="mode" value="high" {{ 'checked' if default_mode=='high' else '' }}> <b>HIGH</b></label>
+      <label class="mode"><input type="radio" name="mode" value="fast" {{ 'checked' if default_mode=='fast' else '' }}> <b>FAST</b></label>
+    </div>
+    <button class="btn primary" type="submit">URL 분석 시작</button>
+    <div class="err" id="url-err" role="alert"></div>
+  </form>
+</section>
+
+<section class="grid3">
+  <div class="card mini"><div class="mini-k" id="st-total">—</div><div class="muted">총 분석</div></div>
+  <div class="card mini"><div class="mini-k" id="st-fake">—</div><div class="muted">딥페이크 판정</div></div>
+  <div class="card mini"><div class="mini-k" id="st-time">—</div><div class="muted">평균 처리 시간</div></div>
+</section>
+
+<section class="card">
+  <h3>어떻게 분석하나요?</h3>
+  <ol class="steps">
+    <li><b>프레임 추출</b> — 장면 전환·움직임을 고려한 적응형 샘플링 (시간 순서 유지)</li>
+    <li><b>얼굴 검출·크롭</b> — 조작 흔적이 집중되는 얼굴 영역만 입력</li>
+    <li><b>CNN</b> — ResNet 백본이 프레임의 공간적 아티팩트(경계·질감) 탐지</li>
+    <li><b>LSTM</b> — 16프레임 오버랩 시퀀스로 시간적 일관성(깜빡임·표정 전이) 분석</li>
+    <li><b>Frequency</b> — FFT 스펙트럼에서 생성 모델 특유의 주파수 패턴 탐지</li>
+    <li><b>앙상블</b> — 검증 데이터로 최적화(Grid Search + Bayesian Opt)된 가중 평균 + 다수결 투표</li>
+    <li><b>Grad-CAM</b> — 모델이 주목한 영역을 히트맵으로 시각화</li>
+  </ol>
+</section>
+{% endblock %}
+{% block scripts %}<script>CAKE.initUpload();</script>{% endblock %}

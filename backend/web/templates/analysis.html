@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}분석 {{ analysis.id }} — CAKE{% endblock %}
+{% block content %}
+<section class="card" id="an" data-id="{{ analysis.id }}" data-status="{{ analysis.status }}">
+  <div class="an-head">
+    <div>
+      <div class="muted small">분석 ID {{ analysis.id }} · {{ analysis.mode|upper }} 모드</div>
+      <h2 class="src" title="{{ analysis.source_name }}">{{ analysis.source_name }}</h2>
+      <div class="muted small" id="an-meta"></div>
+    </div>
+    <span class="risk" id="an-risk" style="background:#888">{{ analysis.risk_level or '분석 중' }}</span>
+  </div>
+
+  <div id="an-progress" class="progress big" {% if analysis.status in ('done','failed') %}hidden{% endif %}>
+    <div class="bar" style="width:{{ analysis.progress }}%"></div>
+    <span class="ptxt" id="an-ptxt">{{ analysis.message or '대기 중' }}</span>
+  </div>
+  <div class="err" id="an-err" role="alert">{{ analysis.error or '' }}</div>
+</section>
+
+<section id="an-result" {% if analysis.status != 'done' %}hidden{% endif %}>
+  <div class="grid3">
+    <div class="card mini"><div class="mini-k" id="r-score">—</div><div class="muted">위험 점수 (0~100)</div></div>
+    <div class="card mini"><div class="mini-k" id="r-conf">—</div><div class="muted">신뢰도</div></div>
+    <div class="card mini"><div class="mini-k" id="r-vote">—</div><div class="muted">모델 투표 (fake / 전체)</div></div>
+  </div>
+
+  <div class="card">
+    <h3>모델별 점수</h3>
+    <div class="bars" id="r-bars"></div>
+    <p class="muted small" id="r-ens"></p>
+    <div id="r-facewarn" hidden></div>
+  </div>
+
+  <div class="card">
+    <h3>프레임별 점수</h3>
+    <canvas id="r-chart" height="220"></canvas>
+    <div class="legend"><span class="lg c-cnn">CNN</span><span class="lg c-freq">Frequency</span><span class="lg c-lstm">LSTM</span><span class="lg c-ens">Ensemble</span><span class="lg c-thr">임계값</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Grad-CAM 히트맵</h3>
+    <p class="muted small">모델이 판단에 사용한 영역이 붉게 표시됩니다.</p>
+    <video id="r-video" controls loop muted playsinline hidden></video>
+    <div class="thumbs" id="r-thumbs"></div>
+  </div>
+
+  <div class="card">
+    <h3>의심 프레임 <span class="muted small">(임계값 이상, 점수 상위)</span></h3>
+    <div class="thumbs" id="r-sus"></div>
+  </div>
+
+  <div class="card dl">
+    <h3>리포트 다운로드</h3>
+    <a class="btn" id="dl-html" target="_blank">HTML 리포트</a>
+    <a class="btn" id="dl-csv">scores.csv</a>
+    <a class="btn" id="dl-json">result.json</a>
+    <a class="btn" id="dl-video">heatmap.mp4</a>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script>CAKE.initAnalysis();</script>{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}분석 기록 — CAKE{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="an-head">
+    <h2>분석 기록</h2>
+    <label class="field inline"><span>상태</span>
+      <select id="h-filter"><option value="">전체</option><option value="done">완료</option><option value="processing">진행 중</option><option value="queued">대기</option><option value="failed">실패</option></select>
+    </label>
+  </div>
+  <div class="table-wrap">
+    <table class="tbl" id="h-table">
+      <thead><tr><th>일시</th><th>영상</th><th>모드</th><th>상태</th><th>위험도</th><th>점수</th><th>신뢰도</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="pager"><button class="btn" id="h-prev">이전</button><span id="h-page">1</span><button class="btn" id="h-next">다음</button></div>
+  <p class="muted small" id="h-empty" hidden>분석 기록이 없습니다.</p>
+</section>
+{% endblock %}
+{% block scripts %}<script>CAKE.initHistory();</script>{% endblock %}

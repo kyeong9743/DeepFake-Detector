@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}CAKE — 딥페이크 탐지 보조{% endblock %}</title>
+<meta name="description" content="CAKE(Catch Fake) — CNN · LSTM · Frequency 하이브리드 딥페이크 탐지 보조 시스템">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🍰%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/"><span class="logo">CAKE</span><span class="tag">Catch Fake · 딥페이크 탐지 보조</span></a>
+  <nav class="nav">
+    <a href="/" class="{{ 'on' if page=='upload' else '' }}">영상 분석</a>
+    <a href="/realtime" class="{{ 'on' if page=='realtime' else '' }}">실시간 분석</a>
+    <a href="/history" class="{{ 'on' if page=='history' else '' }}">분석 기록</a>
+    <a href="/monitor" class="{{ 'on' if page=='monitor' else '' }}">모니터링</a>
+  </nav>
+</header>
+<main class="container">
+{% block content %}{% endblock %}
+</main>
+<footer class="foot">
+  <div>본 서비스는 딥페이크 탐지 <b>보조</b> 도구입니다. 결과는 참고 정보이며 최종 판단은 이용자에게 있습니다.</div>
+  <div class="muted">Slice Team · CAKE v2 · <span id="health-dot" class="dot"></span><span id="health-txt">서버 상태 확인 중</span></div>
+</footer>
+<script src="/static/js/app.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
