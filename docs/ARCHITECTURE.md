@@ -208,14 +208,14 @@ AI Hub 4TB 디스크 (/aihub, ro)  또는  data/real, data/fake
                          --min-weight : 모델별 최소 가중치. 0 이면 cnn .35 / lstm .65 / frequency .00 (AUC .9977).
                          **팀 결정: 0.1 로 세 모델 모두 반영** -> cnn .52 / lstm .38 / fft .10, AUC .9965, ACC 98.1%, thr .514
   ├─ eval_holdout.py     학습 없이 체크포인트(--ckpt-dir 로 보관본 지정 가능)를 홀드아웃 원본 + sns0 변형본으로 재평가 -> holdout_eval_{tag}.json
-  └─ eval_samples.py     data/samples/ (TikTok 실제 딥페이크 8개, md5 중복 제거) 일괄 분석 -> runs/samples_eval_{tag}.json  (도메인 밖 일반화 점검)
+  └─ eval_samples.py     data/samples/ (SNS 실제 영상, labels.csv 로 진짜·가짜·집계 제외(-1) 지정, md5 중복 제거) 일괄 분석 -> runs/samples_eval_{tag}.json  (도메인 밖 일반화 점검)
 ```
 
 실행 래퍼: `scripts/aihub_pipeline.sh` (STEP/END_STEP/MODELS/TRAIN_ARGS/CLIPS/…), `scripts/aihub_run_detached.sh` (setsid 분리 + `### PIPELINE DONE|FAILED` 마커). **WSL 또는 Linux 에서** `docker-compose.aihub.yml` 오버라이드와 함께. 데이터 위치는 `.env` 의 `AIHUB_DATA_DIR` (기본값 없음).
 
 체크포인트 메타(`models/registry.py: save_checkpoint`): kind, mode, backbone, frame_size, window, stride, bidirectional, normalize_mean/std, saved_at, metrics(oof·holdout·folds·by_method), n_videos. 로드는 `strict=True`, 메타 불일치 시 예외 — **랜덤 가중치로 조용히 추론하는 경로가 없다.**
 
-**실측**: AI Hub 홀드아웃 2,640 — CNN AUC 0.9987/ACC 98.8%, LSTM 0.9991/98.6%, FFT 0.873/78.9%, 앙상블 0.9977/98.1%. SNS 실제 영상 8개(가짜 5·진짜 3, 라벨 정정·샘플 추가): 가짜 3/5 탐지, 진짜 3/3 정답 -> 도메인 밖 일반화 약함. `runs/samples_eval_v1_labeled.json`.
+**실측**: AI Hub 홀드아웃 2,640 — CNN AUC 0.9987/ACC 98.8%, LSTM 0.9991/98.6%, FFT 0.873/78.9%, 앙상블 0.9977/98.1%. SNS 실제 영상 8개(가짜 5·진짜 3, VFX 1개는 집계 제외): 가짜 4/5 탐지, 진짜 3/3 정답 -> 도메인 밖 일반화 약함. `runs/samples_eval_v1_labeled.json`.
 
 ---
 
