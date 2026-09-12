@@ -216,7 +216,7 @@ docker compose exec detector python -m inference.cli "https://www.youtube.com/wa
 
 ## 5-3. 샘플 영상
 
-`data/samples/` 에 v1 시절 테스트에 쓰던 **TikTok 딥페이크 영상 8개**가 있다 (학습 데이터 아님, 동작 확인용). 제3자 콘텐츠이므로 git 에 포함되지 않으며(`data/` 제외) 공개 자료에 쓰지 않는다.
+`data/samples/` 에 SNS 에서 수집한 **실제 영상 9개**(가짜 5, 진짜 3, VFX 1)와 라벨 파일 labels.csv 가 있다 (학습 데이터 아님, 일반화 점검용. -1 은 집계 제외). 제3자 콘텐츠이므로 영상은 git 에 포함되지 않으며(data/ 제외) 공개 자료에 쓰지 않는다. 라벨과 평가 결과는 파일명을 샘플 A~I 로 바꿔 docs/metrics/ 에 두었다.
 
 ## 5-4. 문서
 
@@ -268,7 +268,7 @@ cake/
 ├─ LICENSE              MIT
 ├─ backend/schema.sql   MariaDB 참고 스키마 (테이블은 자동 생성)
 ├─ checkpoints/         학습 가중치 high_*.pt, high_ensemble.json (git 제외)
-├─ data/                samples/(TikTok 테스트 8개) · manifest.csv · cache_test/ (git 제외)
+├─ data/                samples/(SNS 실제 영상 9개 + labels.csv) · manifest.csv · cache_test/ (git 제외)
 ├─ runs/                학습 로그·지표·OOF·fold 체크포인트 (git 제외)
 └─ scripts/             aihub_pipeline.sh(실데이터 학습 전체) · aihub_run_detached.sh(분리 실행) · smoke_test.ps1(합성 데이터 검증) · bench_gpu.py(GPU 처리량 진단)
 ```
@@ -287,14 +287,14 @@ cake/
 | 앙상블 (cnn 0.35 · lstm 0.65 · fft 0.00, thr 0.41) | AUC 0.9977 / ACC 98.1% / F1 0.981 | — |
 
 - 변조 방법별로는 **fsgan** 이 가장 어렵고(CNN recall 0.89, LSTM 0.83), Frequency 는 고비트레이트 재인코딩본(anti_fake)에 취약한다.
-- Frequency 가중치 0 은 데이터 기반 최적화 결과이다. **팀 결정으로 `--min-weight 0.1` 을 적용해 세 모델을 모두 반영 중**: cnn 0.52 · lstm 0.38 · fft 0.10, thr 0.514 -> OOF AUC 0.9965 / ACC 98.1% / F1 0.981 (AUC −0.0012, ACC 동일). SNS 샘플 8개(가짜 5·진짜 3) 결과는 가짜 3/5 탐지·진짜 3/3 정답으로 변화 없음(`runs/samples_eval_v1_labeled.json`, 라벨 `data/samples/labels.csv`).
+- Frequency 가중치 0 은 데이터 기반 최적화 결과이다. **팀 결정으로 `--min-weight 0.1` 을 적용해 세 모델을 모두 반영 중**: cnn 0.52 · lstm 0.38 · fft 0.10, thr 0.514 -> OOF AUC 0.9965 / ACC 98.1% / F1 0.981 (AUC −0.0012, ACC 동일). SNS 샘플 8개(가짜 5·진짜 3) 결과는 가짜 4/5 탐지·진짜 3/3 정답으로 변화 없음(`runs/samples_eval_v1_labeled.json`, 라벨 `data/samples/labels.csv`).
 - **압축 강건성 (실측, `training.eval_holdout`)**: 같은 홀드아웃을 SNS 급 H.264 재압축(축소 0.5 ~ 0.85, CRF 23~34)하면 앙상블 정확도 98.8% -> **92.8%**, 그중 **real->fake 오탐이 0.2% -> 12.4%** 로 늘고 fake 놓침은 그대로이다 (CNN 단독은 88.7%, 오탐 20.7%). 원본(HEVC 고화질) vs 변조(H.264) 인코딩 편향을 일부 학습한 결과이며, 압축 증강 재학습(`make_sns_variants` + `--sns-prob`)이 그 대책이다. 근거: `runs/high/holdout_eval_v1_minw0.1.json`.
-- 이 수치는 **AI Hub 데이터셋 분포 기준**이다. 분포가 다른 실제 SNS 영상(`data/samples/` 8개: fake 5, real 3. 라벨은 `labels.csv`)에서는 **fake 5개 중 3개만 탐지, real 3개는 정답** 이었다 — 생성기·필터·재압축이 달라 일반화가 약하다. 표본이 작고 구성(한국인 3·외국인 4·다수 인물 1)이 고르지 않아 비율이 아닌 사례로 본다. 개선 선택지(FF++/Celeb-DF 추가, SNS 압축 증강, 임계값 조정, Frequency 재설계)가 있다. **공개 문서에는 두 수치를 함께 적는 것이 정직한다.**
+- 이 수치는 **AI Hub 데이터셋 분포 기준**이다. 분포가 다른 실제 SNS 영상(`data/samples/` 8개: fake 5, real 3. 라벨은 labels.csv, VFX 1개는 -1 로 집계 제외)에서는 **fake 5개 중 4개 탐지, real 3개는 정답** 이었다 — 생성기·필터·재압축이 달라 일반화가 약하다. 표본이 작고 구성(한국인 3·외국인 4·다수 인물 1)이 고르지 않아 비율이 아닌 사례로 본다. 개선 선택지(FF++/Celeb-DF 추가, SNS 압축 증강, 임계값 조정, Frequency 재설계)가 있다. **공개 문서에는 두 수치를 함께 적는 것이 정직한다.**
 
 ## 9. 알려진 한계
 
 - 정확도 등 성능 수치는 **학습 데이터에 따라** 결정된다. `runs/{mode}/*_summary.json` 의 OOF·홀드아웃 지표를 문서에 인용한다 (§8-1).
 - 얼굴이 매우 작거나(`small_face`) 가려지거나 자주 벗어나는(`low_face_ratio`/`no_face`) 영상은 `quality_warnings` 와 함께 `face_warning` 이 표시되며 신뢰성이 낮다. 얼굴 없는 프레임은 점수에서 제외된다.
-- 학습 데이터(AI Hub 6개 변조 방법, 스튜디오 촬영)와 다른 생성기·VFX·완전 생성 영상은 탐지 범위 밖이다. 실제 SNS 딥페이크 5개 중 3개 탐지(§8-1).
+- 학습 데이터(AI Hub 6개 변조 방법, 스튜디오 촬영)와 다른 생성기·VFX·완전 생성 영상은 탐지 범위 밖이다. 실제 SNS 딥페이크 5개 중 4개 탐지(§8-1).
 - GPU 1장 기준 동시 분석 1건(`max_concurrent_analyses`). 추가 요청은 큐에서 대기한다.
 - 본 결과는 **보조 정보**이며 법적 판단의 근거가 될 수 없다.
