@@ -45,8 +45,8 @@ AI Hub 「딥페이크 변조 영상」 데이터셋 15,834개로 학습했고, 
 | 개발 기간 | 2025.02 ~ 2025.06 (설계·개발·실데이터 학습·발표), 2026.09 (재구축) |
 | 팀 | 슬라이스(Slice) — 노태정, 이수진, 지은정 |
 
-<!-- 링크: GitBook 주소 | 상세 문서 — 아키텍처, 파이프라인, 모델, 학습, 실험 결과 -->
-<!-- 링크: velog 주소 | ✍️ 개발기 -->
+* **[GitBook (프로젝트 문서)](https://kyeong9743.gitbook.io/kyeong9743/deepfake-detector)** : 기획 배경, 시스템 구조도, 상세 문서
+* **[Velog (개발 일지)](https://velog.io/@kyeong9743/CAKE-%EA%B0%9C%EB%B0%9C%EA%B8%B0-1%ED%8E%B8-%EB%94%A5%ED%8E%98%EC%9D%B4%ED%81%AC%EB%A5%BC-%EC%9E%A1%EB%8A%94-%EC%84%B8-%EA%B0%9C%EC%9D%98-%EB%88%88)** : 작업 과정, 구현 이슈 및 트러블슈팅 기록
 
 ---
 
@@ -295,9 +295,8 @@ cake/
 | [성능 측정 원본](docs/metrics/) | 모델별 교차검증·홀드아웃 지표, 앙상블 가중치, 재압축 평가 JSON |
 | 발표 자료 | 2025년 6월 10일 발표 슬라이드와 포스터. 저장소에 포함하지 않으며 요청 시 제공한다 |
 
-<!-- 링크: GitBook 주소 | 위 표 "상세 문서 (GitBook)" 에 연결 -->
-<!-- 링크: velog 주소 | 위 표 "개발기 (velog)" 에 연결 -->
-<!-- 발표 슬라이드 pdf·포스터 pdf 는 저장소 밖(.gitignore 제외). 링크할 곳이 생기면 위 표 "발표 자료" 에 연결 -->
+[![GitBook](https://img.shields.io/badge/GitBook-Project_Docs-3884FF?style=for-the-badge&logo=gitbook&logoColor=white)](https://kyeong9743.gitbook.io/kyeong9743/deepfake-detector)
+[![Velog](https://img.shields.io/badge/Velog-Devlog_%26_Log-20C997?style=for-the-badge&logo=v&logoColor=white)](https://velog.io/@kyeong9743/CAKE-%EA%B0%9C%EB%B0%9C%EA%B8%B0-1%ED%8E%B8-%EB%94%A5%ED%8E%98%EC%9D%B4%ED%81%AC%EB%A5%BC-%EC%9E%A1%EB%8A%94-%EC%84%B8-%EA%B0%9C%EC%9D%98-%EB%88%88)
 
 ---
 
@@ -332,15 +331,68 @@ cake/
 
 ## 12. 팀원
 
-| 이름 | 역할 |
-|---|---|
-| 노태정 (팀장) | 프로젝트 총괄, AI 모델 설계와 학습, 네트워크와 서버 |
-| 이수진 | 백엔드와 서버 개발, 데이터베이스와 파일 시스템 설계 |
-| 지은정 | Android 앱 개발 (v1 프로젝트, 현재 저장소 미포함), UI/UX 설계, 네트워크 |
+<table>
+  <tbody>
+    <tr>
+      <td align="center" width="33%">
+        <a href="https://github.com/kyeong9743">
+          <img src="https://github.com/kyeong9743.png" width="110px" alt="프로필" style="border-radius: 50%;"/><br /><br />
+          <b>노태정 (팀장)</b>
+        </a><br /><br />
+        <a href="https://github.com/kyeong9743">
+          <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white" />
+        </a>
+      </td>
+      <td align="center" width="33%">
+        <a href="https://github.com/soojin10">
+          <img src="https://github.com/soojin10.png" width="110px" alt="프로필" style="border-radius: 50%;"/><br /><br />
+          <b>이수진</b>
+        </a><br /><br />
+        <a href="https://github.com/soojin10">
+          <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white" />
+        </a>
+      </td>
+      <td align="center" width="33%">
+        <a href="https://github.com/eunjung3">
+          <img src="https://github.com/eunjung3.png" width="110px" alt="프로필" style="border-radius: 50%;"/><br /><br />
+          <b>지은정</b>
+        </a><br /><br />
+        <a href="https://github.com/eunjung3">
+          <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white" />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <b>담당 역할</b>
+        <ul>
+          <li>프로젝트 총괄</li>
+          <li>AI 모델 설계 및 학습</li>
+          <li>네트워크 및 서버 구축</li>
+        </ul>
+      </td>
+      <td valign="top">
+        <b>담당 역할</b>
+        <ul>
+          <li>백엔드 및 서버 개발</li>
+          <li>데이터베이스 설계</li>
+          <li>파일 시스템 설계</li>
+        </ul>
+      </td>
+      <td valign="top">
+        <b>담당 역할</b>
+        <ul>
+          <li>UI/UX 설계</li>
+          <li>네트워크</li>
+          <li>Android 앱 개발<br /><sub>(v1 프로젝트, 현재 저장소 미포함)</sub></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-개발 도구: v2 재구축 과정에서 코드 작성과 문서 정리에 Claude Code 를 사용했다. 설계 결정, 데이터 라벨 확인, 실험 결과 해석과 검증은 팀이 했다.
-
-<!-- 링크: 팀원 GitHub 주소 | 위 표에 GitHub 링크를 붙일 경우 -->
+> **개발 도구**  
+> v2 재구축 과정에서 코드 작성과 문서 정리에 Claude Code 를 사용했다. 설계 결정, 데이터 라벨 확인, 실험 결과 해석과 검증은 팀이 했다.
 
 ---
 
