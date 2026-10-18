@@ -287,7 +287,7 @@ cake/
 | 앙상블 (cnn 0.35 · lstm 0.65 · fft 0.00, thr 0.41) | AUC 0.9977 / ACC 98.1% / F1 0.981 | — |
 
 - 변조 방법별로는 **fsgan** 이 가장 어렵고(CNN recall 0.89, LSTM 0.83), Frequency 는 고비트레이트 재인코딩본(anti_fake)에 취약한다.
-- Frequency 가중치 0 은 데이터 기반 최적화 결과이다. **팀 결정으로 `--min-weight 0.1` 을 적용해 세 모델을 모두 반영 중**: cnn 0.52 · lstm 0.38 · fft 0.10, thr 0.514 -> OOF AUC 0.9965 / ACC 98.1% / F1 0.981 (AUC −0.0012, ACC 동일). SNS 샘플 8개(가짜 5·진짜 3) 결과는 가짜 4/5 탐지·진짜 3/3 정답으로 변화 없음(`runs/samples_eval_v1_labeled.json`, 라벨 `data/samples/labels.csv`).
+- Frequency 가중치 0 은 데이터 기반 최적화 결과이다. **`--min-weight 0.1` 을 적용해 세 모델을 모두 반영 중**: cnn 0.52 · lstm 0.38 · fft 0.10, thr 0.514 -> OOF AUC 0.9965 / ACC 98.1% / F1 0.981 (AUC −0.0012, ACC 동일). SNS 샘플 8개(가짜 5·진짜 3) 결과는 가짜 4/5 탐지·진짜 3/3 정답으로 변화 없음(`runs/samples_eval_v1_labeled.json`, 라벨 `data/samples/labels.csv`).
 - **압축 강건성 (실측, `training.eval_holdout`)**: 같은 홀드아웃을 SNS 급 H.264 재압축(축소 0.5 ~ 0.85, CRF 23~34)하면 앙상블 정확도 98.8% -> **92.8%**, 그중 **real->fake 오탐이 0.2% -> 12.4%** 로 늘고 fake 놓침은 그대로이다 (CNN 단독은 88.7%, 오탐 20.7%). 원본(HEVC 고화질) vs 변조(H.264) 인코딩 편향을 일부 학습한 결과이며, 압축 증강 재학습(`make_sns_variants` + `--sns-prob`)이 그 대책이다. 근거: `runs/high/holdout_eval_v1_minw0.1.json`.
 - 이 수치는 **AI Hub 데이터셋 분포 기준**이다. 분포가 다른 실제 SNS 영상(`data/samples/` 8개: fake 5, real 3. 라벨은 labels.csv, VFX 1개는 -1 로 집계 제외)에서는 **fake 5개 중 4개 탐지, real 3개는 정답** 이었다 — 생성기·필터·재압축이 달라 일반화가 약하다. 표본이 작고 구성(한국인 3·외국인 4·다수 인물 1)이 고르지 않아 비율이 아닌 사례로 본다. 개선 선택지(FF++/Celeb-DF 추가, SNS 압축 증강, 임계값 조정, Frequency 재설계)가 있다. **공개 문서에는 두 수치를 함께 적는 것이 정직한다.**
 
