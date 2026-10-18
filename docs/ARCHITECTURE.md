@@ -206,7 +206,7 @@ AI Hub 4TB 디스크 (/aihub, ro)  또는  data/real, data/fake
   │
   └─ ensemble_opt.py     oof_*.csv 를 영상별 평균으로 1행화(홀드아웃 fold 중복 제거) -> merge -> Grid(0.05) + BO(GP-EI 40) -> {mode}_ensemble.json
                          --min-weight : 모델별 최소 가중치. 0 이면 cnn .35 / lstm .65 / frequency .00 (AUC .9977).
-                         **팀 결정: 0.1 로 세 모델 모두 반영** -> cnn .52 / lstm .38 / fft .10, AUC .9965, ACC 98.1%, thr .514
+                         **결정: 0.1 로 세 모델 모두 반영** -> cnn .52 / lstm .38 / fft .10, AUC .9965, ACC 98.1%, thr .514
   ├─ eval_holdout.py     학습 없이 체크포인트(--ckpt-dir 로 보관본 지정 가능)를 홀드아웃 원본 + sns0 변형본으로 재평가 -> holdout_eval_{tag}.json
   └─ eval_samples.py     data/samples/ (SNS 실제 영상, labels.csv 로 진짜·가짜·집계 제외(-1) 지정, md5 중복 제거) 일괄 분석 -> runs/samples_eval_{tag}.json  (도메인 밖 일반화 점검)
 ```
